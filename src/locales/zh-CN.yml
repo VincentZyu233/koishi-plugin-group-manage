@@ -33,12 +33,20 @@ commands:
       missing-user: 请指定被取消禁言的用户
       executed: 已执行取消禁言
 
-  delmsg:
+  del-msg:
     description: 撤回指定消息
     usage: |-
       示例：回复一条消息，内容有且仅有“delmsg”
     messages:
       missing-quote: 请回复被撤回的消息
+      executed: 已执行撤回
+
+  batch-del-msg:
+    description: 批量撤回消息
+    usage: |-
+      示例：batch-del-msg 20
+    messages:
+      missing-count: 请指定要撤回消息的条数
       executed: 已执行撤回
 
   kick:

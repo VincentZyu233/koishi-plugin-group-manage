@@ -1,4 +1,4 @@
-import { Context, Schema, Dict, Time } from 'koishi'
+import { Context, Schema, Dict, Time, noop } from 'koishi'
 
 export const name = 'group-manage'
 
@@ -132,12 +132,37 @@ export function apply(ctx: Context, cfg: Config) {
       return session.text('.executed')
     })
 
-  command.subcommand('delmsg', { authority: 3 })
+  command.subcommand('del-msg', { authority: 3 })
     .alias('撤回消息')
     .action(async (argv) => {
       const session = argv.session!
       if (!session.quote) return session.text('.missing-quote')
       await session.bot.deleteMessage(session.channelId!, session.quote.id!)
+      return session.text('.executed')
+    })
+
+  command.subcommand('batch-del-msg <count:posint>', { authority: 3 })
+    .alias('批量撤回消息')
+    .action(async (argv, count) => {
+      const session = argv.session!
+      if (count === undefined) return session.text('.missing-count')
+      const msgList = []
+      let next: string | undefined
+      let exclude: string | undefined
+      while (msgList.length < count) {
+        const list = await session.bot.getMessageList(session.channelId!, next)
+        if (list.data.length === 0) break
+        msgList.unshift(...list.data.filter(e => e.id !== exclude))
+        if (list.next) {
+          next = list.next
+        } else {
+          exclude = list.data[0].id
+          next = list.data[0].id
+        }
+      }
+      for (const msg of msgList.slice(-count)) {
+        session.bot.deleteMessage(msg.channel!.id, msg.id!).catch(noop)
+      }
       return session.text('.executed')
     })
 

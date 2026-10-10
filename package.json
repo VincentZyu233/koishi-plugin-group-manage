@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-group-manage",
   "description": "Group Management Tools",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -28,13 +28,13 @@
     "koishi": "^4.17.7"
   },
   "devDependencies": {
+    "esbuild": "^0.28.1",
     "koishi": "^4.17.7",
+    "typescript": "^7.0.2",
     "yakumo": "^3.2.1",
     "yakumo-esbuild": "^3.0.2",
     "yakumo-tsc": "^3.0.1",
-    "typescript": "^7.0.2",
-    "yml-register": "^1.2.5",
-    "esbuild": "^0.28.1"
+    "yml-register": "^1.2.5"
   },
   "scripts": {
     "build": "yakumo build"
