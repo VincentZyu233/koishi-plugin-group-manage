@@ -16,6 +16,7 @@ export interface Config {
   blockingRules: Dict<BlockingRule, string>
   banDuration: number
   enableQuote: boolean
+  enableCaptureQuoteArg: boolean
   enableBan: boolean
   enableBanMe: boolean
   enableBatchDelMsg: boolean
@@ -30,6 +31,9 @@ export const Config: Schema<Config> = Schema.intersect([
   Schema.object({
     enableQuote: Schema.boolean().description('发送消息时是否引用触发指令的消息').default(true),
   }).description('消息设置'),
+  Schema.object({
+    enableCaptureQuoteArg: Schema.boolean().description('是否捕获被引用消息的文本作为指令参数 (关闭可防止引用消息执行指令时参数被引用内容污染)').default(false),
+  }).description('指令设置'),
   Schema.object({
     enableBan: Schema.boolean().description('启用 ban (禁言) 指令').default(true),
     enableBanMe: Schema.boolean().description('启用 ban-me (自我禁言) 指令').default(true),
@@ -55,7 +59,7 @@ export const Config: Schema<Config> = Schema.intersect([
     }).description('群组平台与群组 ID, 格式:`platform:guildId`, 例如:`red:123456`')).description('规则列表'),
   }).description('违禁词检测设置'),
   Schema.object({
-    banDuration: Schema.natural().role('ms').description('ban 和 ban-me 指令默认禁言时长 (单位为毫秒)').default(15 * Time.hour),
+    banDuration: Schema.natural().role('ms').description('ban 和 ban-me 指令默认禁言时长 (单位为毫秒)').default(1 * Time.minute),
   }).description('指令默认值设置')
 ])
 
@@ -121,10 +125,10 @@ export function apply(ctx: Context, cfg: Config) {
     return cfg.enableQuote && session.messageId ? h('message', h.quote(session.messageId), text) : text
   }
 
-  const command = ctx.command('group-manage')
+  const command = ctx.command('group-manage', { captureQuote: cfg.enableCaptureQuoteArg })
 
   if (cfg.enableBan) {
-    command.subcommand('ban <user:user> <duration:posint> <unit>', { authority: 3 })
+    command.subcommand('ban <user:user> <duration:posint> <unit>', { authority: 3, captureQuote: cfg.enableCaptureQuoteArg })
       .alias('mute', '禁言')
       .action(async (argv, user, duration, unit) => {
         const session = argv.session!
@@ -143,7 +147,7 @@ export function apply(ctx: Context, cfg: Config) {
   }
 
   if (cfg.enableBanMe) {
-    command.subcommand('ban-me <duration:posint> <unit>')
+    command.subcommand('ban-me <duration:posint> <unit>', { captureQuote: cfg.enableCaptureQuoteArg })
       .alias('self-ban', 'mute-me', '自我禁言')
       .action(async (argv, duration, unit) => {
         const session = argv.session!
@@ -160,7 +164,7 @@ export function apply(ctx: Context, cfg: Config) {
   }
 
   if (cfg.enableUnban) {
-    command.subcommand('unban <user:user>', { authority: 3 })
+    command.subcommand('unban <user:user>', { authority: 3, captureQuote: cfg.enableCaptureQuoteArg })
       .alias('unmute', '取消禁言')
       .action(async (argv, user) => {
         const session = argv.session!
@@ -172,7 +176,7 @@ export function apply(ctx: Context, cfg: Config) {
   }
 
   if (cfg.enableDelMsg) {
-    command.subcommand('del-msg', { authority: 3 })
+    command.subcommand('del-msg', { authority: 3, captureQuote: cfg.enableCaptureQuoteArg })
       .alias('撤回消息')
       .action(async (argv) => {
         const session = argv.session!
@@ -183,7 +187,7 @@ export function apply(ctx: Context, cfg: Config) {
   }
 
   if (cfg.enableBatchDelMsg) {
-    command.subcommand('batch-del-msg <count:posint>', { authority: 3 })
+    command.subcommand('batch-del-msg <count:posint>', { authority: 3, captureQuote: cfg.enableCaptureQuoteArg })
       .alias('批量撤回消息')
       .action(async (argv, count) => {
         const session = argv.session!
@@ -218,7 +222,7 @@ export function apply(ctx: Context, cfg: Config) {
   }
 
   if (cfg.enableKick) {
-    command.subcommand('kick <user:user>', { authority: 3 })
+    command.subcommand('kick <user:user>', { authority: 3, captureQuote: cfg.enableCaptureQuoteArg })
       .alias('踢', '踢出群聊')
       .action(async (argv, user) => {
         const session = argv.session!
@@ -230,7 +234,7 @@ export function apply(ctx: Context, cfg: Config) {
   }
 
   if (cfg.enableMuteAll) {
-    command.subcommand('mute-all', { authority: 3 })
+    command.subcommand('mute-all', { authority: 3, captureQuote: cfg.enableCaptureQuoteArg })
       .alias('全员禁言')
       .action(async (argv) => {
         const session = argv.session!
@@ -267,7 +271,7 @@ export function apply(ctx: Context, cfg: Config) {
   }
 
   if (cfg.enableUnmuteAll) {
-    command.subcommand('unmute-all', { authority: 3 })
+    command.subcommand('unmute-all', { authority: 3, captureQuote: cfg.enableCaptureQuoteArg })
       .alias('取消全员禁言')
       .action(async (argv) => {
         const session = argv.session!
