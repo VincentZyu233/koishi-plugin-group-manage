@@ -10,14 +10,15 @@
 
 | 指令 | 别名 | 权限要求 | 说明 | 用法示例 |
 | :--- | :--- | :---: | :--- | :--- |
+| `group-manage` | `groupmanage` | 3 | 群组管理根指令 | `group-manage` |
 | `ban <user> [duration] [unit]` | `mute`, `禁言` | 3 | 禁言指定群成员 | `ban @user 10 分钟`<br>`ban @user 1 小时` |
-| `ban-me [duration] [unit]` | `self-ban`, `mute-me`, `自我禁言` | 无 | 禁言自己 | `ban-me 10 分钟`<br>`ban-me 1 小时` |
+| `ban-me [duration] [unit]` | `banme`, `self-ban`, `mute-me`, `自我禁言` | 无 | 禁言自己 | `ban-me 10 分钟`<br>`ban-me 1 小时` |
 | `unban <user>` | `unmute`, `取消禁言` | 3 | 解除指定群成员的禁言 | `unban @user` |
 | `del-msg` | `delmsg`, `撤回消息` | 3 | 撤回引用的单条消息 | 引用需撤回的消息并发送 `del-msg` |
-| `batch-del-msg <count>` | `批量撤回消息` | 3 | 批量撤回最近指定条数的消息 | `batch-del-msg 10` |
+| `batch-del-msg <count>` | `batchdelmsg`, `批量撤回消息` | 3 | 批量撤回最近指定条数的消息 | `batch-del-msg 10` |
 | `kick <user>` | `踢`, `踢出群聊` | 3 | 将指定成员移出群聊 | `kick @user` |
-| `mute-all` | `全员禁言` | 3 | 开启群全员禁言 | `mute-all` |
-| `unmute-all` | `取消全员禁言` | 3 | 取消群全员禁言 | `unmute-all` |
+| `mute-all` | `muteall`, `全员禁言` | 3 | 开启群全员禁言 | `mute-all` |
+| `unmute-all` | `unmuteall`, `取消全员禁言` | 3 | 取消群全员禁言 | `unmute-all` |
 
 ## 配置项
 

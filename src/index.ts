@@ -126,6 +126,7 @@ export function apply(ctx: Context, cfg: Config) {
   }
 
   const command = ctx.command('group-manage', { captureQuote: cfg.enableCaptureQuoteArg })
+    .alias('groupmanage')
 
   if (cfg.enableBan) {
     command.subcommand('ban <user:user> <duration:posint> <unit>', { authority: 3, captureQuote: cfg.enableCaptureQuoteArg })
@@ -148,7 +149,7 @@ export function apply(ctx: Context, cfg: Config) {
 
   if (cfg.enableBanMe) {
     command.subcommand('ban-me <duration:posint> <unit>', { captureQuote: cfg.enableCaptureQuoteArg })
-      .alias('self-ban', 'mute-me', '自我禁言')
+      .alias('banme', 'self-ban', 'mute-me', '自我禁言')
       .action(async (argv, duration, unit) => {
         const session = argv.session!
         if (!duration) {
@@ -177,7 +178,7 @@ export function apply(ctx: Context, cfg: Config) {
 
   if (cfg.enableDelMsg) {
     command.subcommand('del-msg', { authority: 3, captureQuote: cfg.enableCaptureQuoteArg })
-      .alias('撤回消息')
+      .alias('delmsg', '撤回消息')
       .action(async (argv) => {
         const session = argv.session!
         if (!session.quote) return reply(session, '.missing-quote')
@@ -188,7 +189,7 @@ export function apply(ctx: Context, cfg: Config) {
 
   if (cfg.enableBatchDelMsg) {
     command.subcommand('batch-del-msg <count:posint>', { authority: 3, captureQuote: cfg.enableCaptureQuoteArg })
-      .alias('批量撤回消息')
+      .alias('batchdelmsg', '批量撤回消息')
       .action(async (argv, count) => {
         const session = argv.session!
         if (count === undefined) return reply(session, '.missing-count')
@@ -235,7 +236,7 @@ export function apply(ctx: Context, cfg: Config) {
 
   if (cfg.enableMuteAll) {
     command.subcommand('mute-all', { authority: 3, captureQuote: cfg.enableCaptureQuoteArg })
-      .alias('全员禁言')
+      .alias('muteall', '全员禁言')
       .action(async (argv) => {
         const session = argv.session!
         const { platform, guildId } = session
@@ -272,7 +273,7 @@ export function apply(ctx: Context, cfg: Config) {
 
   if (cfg.enableUnmuteAll) {
     command.subcommand('unmute-all', { authority: 3, captureQuote: cfg.enableCaptureQuoteArg })
-      .alias('取消全员禁言')
+      .alias('unmuteall', '取消全员禁言')
       .action(async (argv) => {
         const session = argv.session!
         const { platform, guildId } = session
